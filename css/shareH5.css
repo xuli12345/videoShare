@@ -1,0 +1,147 @@
+header {
+    margin-top: 20px;
+    width: 100%;
+}
+
+header video {
+    width: 100%;
+    height: 200px;
+    background-color: #000000;
+}
+
+.main,
+.section,
+.intro-comment,
+footer,
+.tags {
+    width: 100%;
+}
+
+.intro-comment {
+    margin-top: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.intro,
+.comment {
+    width: 20%;
+    margin-left: 20%;
+    text-align: center;
+    border-bottom: 1px solid red;
+}
+
+.section {
+    padding: 0.3rem;
+}
+
+.user-info {
+    width: 100%;
+    position: relative;
+}
+
+.user-info img {
+    width: 0.56rem;
+    height: 0.56rem;
+    vertical-align: top;
+    margin-right: 10px
+}
+
+.nick-name,
+.sbu-count,
+.video-title,
+.look-info {
+    width: 85%;
+}
+
+.sbu-count {
+    font-size: 0.12rem;
+    color: #999;
+}
+
+.sbu-count .fans,
+.look-info .look-time {
+    margin-left: 0.1rem;
+}
+
+.sub-btn {
+    width: 0.9rem;
+    height: 0.4rem;
+    position: absolute;
+    right: 0;
+    top: 0.1rem;
+    background-color: red;
+    border-radius: 0.08rem;
+    color: #fff;
+}
+
+.look-info {
+    margin-top: 0.15rem;
+    font-size: 0.12rem;
+    color: #999;
+}
+
+.operation-section {
+    width: 100%;
+}
+
+.operation-section span {
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+}
+
+.tags {
+    margin-top: 0.15rem;
+    height: 0.8rem;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.tags .tag {
+    margin-top: 0.2rem;
+    margin-left: 0.3rem;
+    display: inline-block;
+    padding: 0 0.1rem;
+    height: 0.4rem;
+    background-color: #ddd;
+    border-radius: 0.3rem;
+}
+
+.recommend-list {
+    width: 100%;
+}
+
+.recommend-list li {
+    padding: 0.3rem;
+    border-bottom: 1px solid #eee;
+}
+
+.recommend-list li img {
+    height: 2rem;
+    width: 45%;
+    object-fit: cover;
+}
+
+.recommend-title,
+.recommend-nickName,
+.release-time {
+    width: 55%;
+    padding-left: 0.15rem;
+}
+
+.recommend-nickName,
+.release-time {
+    margin-top: 0.37rem;
+    color: #999;
+}
+
+.release-time {
+    font-size: 0.12rem;
+}
+
+footer .more {
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
+    color: skyblue;
+}

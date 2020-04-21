@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/shareH5.css">
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/axios.min.js"></script>
+    <script>
+        (function(doc, win) {
+            var docEle = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function() {
+                    var clientWidth = docEle.clientWidth;
+                    if (!clientWidth) return;
+                    if (clientWidth >= 750) {
+                        docEle.style.fontSize = '100px';
+                    } else {
+                        docEle.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                    }
+                }
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMcontentLoaded', recalc, false);
+            recalc();
+        })(document, window)
+
+        // var calculate_size = function() {
+        //     var BASE_FONT_SIZE = 100;
+        //     var docEl = document.documentElement, playsinline x5-playsinline  poster="./images/video-icon.png"
+        //         clientWidth = docEl.clientWidth;
+
+        //     if (!clientWidth > 750)
+        //         clientWidth = 750;
+        //     docEl.style.fontSize = BASE_FONT_SIZE * (clientWidth / 750) + 'px';
+        // };
+        // if (document.addEventListener) {
+        //     resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
+        //     window.addEventListener(resizeEvt, calculate_size, false);
+        //     document.addEventListener('DOMcontentLoaded', calculate_size, false);
+        // }
+        // calculate_size();
+    </script>
+</head>
+<script>
+    // ! function(e) {
+    //     function t(a) {
+    //         if (i[a]) return i[a].exports;
+    //         var n = i[a] = {
+    //             exports: {},
+    //             id: a,
+    //             loaded: !1
+    //         };
+    //         return e[a].call(n.exports, n, n.exports, t), n.loaded = !0, n.exports
+    //     }
+    //     var i = {};
+    //     return t.m = e, t.c = i, t.p = "", t(0)
+    // }([function(e, t) {
+    //     "use strict";
+    //     Object.defineProperty(t, "__esModule", {
+    //         value: !0
+    //     });
+    //     var i = window;
+    //     t["default"] = i.flex = function(e, t) {
+    //         var a = e || 100,
+    //             n = t || 1,
+    //             r = i.document,
+    //             o = navigator.userAgent,
+    //             d = o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),
+    //             l = o.match(/U3\/((\d+|\.){5,})/i),
+    //             c = l && parseInt(l[1].split(".").join(""), 10) >= 80,
+    //             p = navigator.appVersion.match(/(iphone|ipad|ipod)/gi),
+    //             s = i.devicePixelRatio || 1;
+    //         p || d && d[1] > 534 || c || (s = 1);
+    //         var u = 1 / s,
+    //             m = r.querySelector('meta[name="viewport"]');
+    //         m || (m = r.createElement("meta"), m.setAttribute("name", "viewport"), r.head.appendChild(m)), m.setAttribute("content", "width=device-width,user-scalable=no,initial-scale=" + u + ",maximum-scale=" + u + ",minimum-scale=" + u), r.documentElement.style.fontSize = a / 2 * s * n + "px"
+    //     }, e.exports = t["default"]
+    // }]);
+    // flex(100, 1);
+</script>
+
+
+<body>
+    <div id="root">
+        <header>
+            <video controls playsinline x5-playsinline :src="details.videoFull" :poster="details.coverImageFull"></video>
+        </header>
+        <div class="main">
+            <div class="intro-comment clearfix">
+                <div class="intro fl">简介</div>
+                <div class="comment fl">评论(0)</div>
+            </div>
+            <div class="section clearfix">
+                <div class="user-info fl clearfix">
+                    <img class="fl" v-if="details.user" :src="details.user.avatarFull" :alt="details.user.nickName" />
+                    <div class="nick-name fl" v-if="details.user">{{details.user.nickName}}</div>
+                    <div class="sbu-count fl" v-if="details.userSocialInfo"><span>{{details.userSocialInfo.followingCount}}订阅</span><span class="fans">{{details.userSocialInfo.followerCount}}粉丝</span></div>
+                    <div class="video-title fl">{{details.title}}</div>
+                    <div class="look-info fl"><span>{{details.viewCount}}浏览量</span><span class="look-time">{{details.showTime}}</span></div>
+                    <button class="sub-btn">+订阅</button>
+                </div>
+            </div>
+
+            <div class="operation-section"><span>点赞({{details.favorCount}})</span><span>收藏({{details.collectCount}})</span><span>分享({{details.shareCount}})</span><span>更多</span></div>
+            <div class="tags" v-for="item in details.tags" v-if="details.tags">
+                <div class="tag">{{item.name}}</div>
+            </div>
+            <div>
+                <ul class="recommend-list">
+                    <li class="clearfix" v-for="item in socialList" :key="item.id" @click="choiceVideo(item.id)">
+                        <img class="fl" :src="item.coverImageFull" alt="">
+                        <div class="recommend-title fl">{{item.title}}</div>
+                        <div :v-if="item.user" class="recommend-nickName fl">{{item.user.nickName}}</div>
+                        <div class="release-time fl">{{item.createTime|formatDate}}</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <footer>
+            <div @click="getMore" class="more">{{hintInfo}}</div>
+        </footer>
+    </div>
+</body>
+
+</html>
+<script>
+    Vue.prototype.baseUrl = "http://api.orgtv.cn/yc-api";
+    var vm = new Vue({
+        el: '#root',
+        data() {
+            return {
+                isAndroid: false, //是否是安卓操作系统
+                isiOS: false, //是ios操作系统
+                details: {}, //视频详细信息
+                socialList: [], //推荐视频列表
+                size: 6, //推荐页视频条数
+                hintInfo: "获取更多~~~",
+                disableClick: false, //false为能点击更多 true推荐视频已全部加载
+            }
+        },
+        methods: {
+            init() {
+                this.getDetail();
+                this.getSocialList(this.size);
+            },
+            getDetail(id) {
+                if (id) {
+
+                } else {
+                    id = 408;
+                }
+                // let that = this;
+                axios.get(this.baseUrl + '/feed:feeds/' + id + '?currentUserId=&projection=withTag,withMedia,withPlazas')
+                    .then(res => {
+                        if (res.data.code == 0) {
+                            let data = res.data.data;
+                            //距离发布时间
+                            let timeSlot = (new Date().getTime() - data.createTime);
+                            data.showTime = this.timeAlgorithm(timeSlot);
+                            this.details = data;
+                        }
+                    })
+            },
+            getSocialList(size) {
+                axios.get(this.baseUrl + '/feed:feeds/social-page?page=0&size=' + size)
+                    .then(res => {
+                        let data = res.data.data.content;
+                        console.log(data);
+                        if (data.length / size < 1) {
+                            this.disableClick = true;
+                            this.hintInfo = "已加载全部!!"
+                        }
+                        this.socialList = data;
+                    })
+            },
+            getMore() {
+                if (!this.disableClick) {
+                    this.size += 6;
+                    this.getSocialList(this.size);
+                } else {
+                    return
+                }
+            },
+            //点击推荐列表里的视频
+            choiceVideo(id) {
+                this.getDetail(id);
+            },
+            //时间换算
+            timeAlgorithm(timecount) {
+                let year = Math.floor(timecount / (365 * 24 * 60 * 60 * 1000)); //年数
+                let month = Math.floor(timecount / (31 * 60 * 60 * 1000)); // 月数
+                let day = Math.floor(timecount / (24 * 60 * 60 * 1000)); //天数
+                let hours = Math.floor(timecount / (60 * 60 * 1000)); //小时数
+                let minute = Math.floor(timecount / 60000); //分钟数
+                let second = Math.floor(timecount / 1000) // 秒数
+                if (year > 0) {
+                    return year + "年前"
+                }
+                if (month > 0) {
+                    return month + "月前"
+                }
+                if (day > 0) {
+                    return day + "天前"
+                }
+                if (hours > 0) {
+                    return hours + "小时前"
+                }
+                if (minute > 0) {
+                    return minute + "分钟前"
+                }
+                if (second > 0) {
+                    return second + "秒前"
+                }
+            }
+        },
+        filters: {
+            formatDate(time) {
+                let date = new Date(time);
+                Y = date.getFullYear();
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+                D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+                h = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+                m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+                return Y + '-' + M + '-' + D + ' ' + h + ':' + m;
+            }
+        },
+        created() {
+            console.log(navigator.userAgent);
+            let u = navigator.userAgent;
+            this.isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //Android终端
+            this.isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            console.log(this.isAndroid, this.isiOS);
+
+            this.init();
+        },
+
+    })
+</script>
